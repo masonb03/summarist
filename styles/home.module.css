@@ -1,0 +1,15 @@
+.home__cta--btn {
+  max-width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* HOME */
+.section__title {
+  font-size: 32px;
+  color: #032b41;
+  text-align: center;
+  margin-bottom: 32px;
+  font-weight: bold;
+}
