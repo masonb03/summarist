@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import logo from '../public/logo.png'
 import landing from '../public/landing.png'
 import { AiFillFileText, AiFillBulb, AiFillAudio } from 'react-icons/ai'
@@ -10,7 +11,34 @@ import Image from 'next/image'
 
 const Home = () => {
 
+  const headings: string[] = [
+  "Enhance your knowledge",
+  "Achieve greater success",
+  "Improve your health",
+  "Develop better parenting skills",
+  "Increase happiness",
+  "Be the best version of yourself!"
+];
 
+const headingsSecond: string[] = [
+  "Expand your learning",
+  "Accomplish your goals",
+  "Strengthen your vitality",
+  "Become a better caregiver",
+  "Improve your mood",
+  "Maximize your abilities"
+];
+
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % headings.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [headings.length])
+ 
   return (
     <div>
     <nav className="nav">
@@ -37,10 +65,8 @@ const Home = () => {
               </div>
               <div className="landing__content__subtitle">
                 Great summaries for busy people,
-                <br className="remove--tablet" />
-                individuals who barely have time to read,
-                <br className="remove--tablet" />
-                and even people who don’t like to read.
+                <br className="remove--tablet" /> individuals who barely have time to read,
+                <br className="remove--tablet" /> and even people who don’t like to read.
               </div>
               <button className="btn home__cta--btn">Login</button>
             </div>
@@ -86,16 +112,16 @@ const Home = () => {
           </div>
           <div className="statistics__wrapper">
             <div className="statistics__content--header">
-              <div className="statistics__heading">Enhance your knowledge</div>
-              <div className="statistics__heading">Achieve greater success</div>
-              <div className="statistics__heading">Improve your health</div>
-              <div className="statistics__heading">
-                Develop better parenting skills
-              </div>
-              <div className="statistics__heading">Increase happiness</div>
-              <div className="statistics__heading">
-                Be the best version of yourself!
-              </div>
+              {headings.map((heading, index) => (
+                <div
+                key={index}
+                className={`statistics__heading ${
+                  index === activeIndex ? "statistics__heading--active" : ""
+                }`}
+                >
+                  {heading}
+                </div>
+              ))}
             </div>
             <div className="statistics__content--details">
               <div className="statistics__data">
@@ -126,8 +152,7 @@ const Home = () => {
               <div className="statistics__data">
                 <div className="statistics__data--number">91%</div>
                 <div className="statistics__data--title">
-                  of Summarist members <b>report feeling more productive</b>
-                   after incorporating the service into their daily routine.
+                  of Summarist members <b>report feeling more productive</b> after incorporating the service into their daily routine.
                 </div>
               </div>
               <div className="statistics__data">
@@ -148,12 +173,16 @@ const Home = () => {
             <div
               className="statistics__content--header statistics__content--header-second"
             >
-              <div className="statistics__heading">Expand your learning</div>
-              <div className="statistics__heading">Accomplish your goals</div>
-              <div className="statistics__heading">Strengthen your vitality</div>
-              <div className="statistics__heading">Become a better caregiver</div>
-              <div className="statistics__heading">Improve your mood</div>
-              <div className="statistics__heading">Maximize your abilities</div>
+              {headingsSecond.map((heading, index) => (
+                <div
+                  key={index}
+                  className={`statistics__heading ${
+                    index === activeIndex ? "statistics__heading--active" : ""
+                  }`}
+                  >
+                  {heading}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -193,8 +222,7 @@ const Home = () => {
                 </div>
               </div>
               <div className="review__body">
-                I love this app! It provides
-                <b>concise and accurate summaries</b> of books in a way that is
+                I love this app! It provides <b>concise and accurate summaries</b> of books in a way that is
                 easy to understand. It&apos;s also very user-friendly and intuitive.
               </div>
             </div>
@@ -211,9 +239,8 @@ const Home = () => {
               </div>
               <div className="review__body">
                 This app is a great way to get the main takeaways from a book
-                without having to read the entire thing.
-                <b>The summaries are well-written and informative.</b>
-                Definitely worth downloading.
+                without having to read the entire thing. 
+                <b> The summaries are well-written and informative.</b> Definitely worth downloading.
               </div>
             </div>
             <div className="review">
@@ -229,7 +256,7 @@ const Home = () => {
               </div>
               <div className="review__body">
                 If you&apos;re a busy person who
-                <b>loves reading but doesn&apos;t have the time</b> to read every
+                <b> loves reading but doesn&apos;t have the time</b> to read every
                 book in full, this app is for you! The summaries are thorough
                 and provide a great overview of the book&apos;s content.
               </div>
