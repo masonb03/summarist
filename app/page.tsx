@@ -7,6 +7,8 @@ import { BsStarFill, BsStarHalf } from 'react-icons/bs'
 import { BiCrown } from 'react-icons/bi'
 import { RiLeafLine } from 'react-icons/ri'
 import Image from 'next/image'
+import AuthModal from '@/components/AuthModal'
+import CreateAcc from '@/components/CreateAcc'
 
 
 const Home = () => {
@@ -18,16 +20,27 @@ const Home = () => {
   "Develop better parenting skills",
   "Increase happiness",
   "Be the best version of yourself!"
-];
+  ];
 
-const headingsSecond: string[] = [
-  "Expand your learning",
-  "Accomplish your goals",
-  "Strengthen your vitality",
-  "Become a better caregiver",
-  "Improve your mood",
-  "Maximize your abilities"
-];
+  const headingsSecond: string[] = [
+    "Expand your learning",
+    "Accomplish your goals",
+    "Strengthen your vitality",
+    "Become a better caregiver",
+    "Improve your mood",
+    "Maximize your abilities"
+  ];
+
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+
+  const openAuth = () => {
+    setIsAuthOpen(true);
+  };
+
+  const closeAuth = () => {
+    setIsAuthOpen(false);
+  };
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
@@ -41,13 +54,14 @@ const headingsSecond: string[] = [
  
   return (
     <div>
+      
     <nav className="nav">
       <div className="nav__wrapper">
         <figure className="nav__img--mask">
           <Image className="nav__img" src={logo} alt="logo" />
         </figure>
         <ul className="nav__list--wrapper">
-          <li className="nav__list nav__list--login">Login</li>
+          <li className="nav__list nav__list--login" onClick={openAuth}>Login</li>
           <li className="nav__list nav__list--mobile">About</li>
           <li className="nav__list nav__list--mobile">Contact</li>
           <li className="nav__list nav__list--mobile">Help</li>
@@ -68,7 +82,7 @@ const headingsSecond: string[] = [
                 <br className="remove--tablet" /> individuals who barely have time to read,
                 <br className="remove--tablet" /> and even people who don’t like to read.
               </div>
-              <button className="btn home__cta--btn">Login</button>
+              <button className="btn home__cta--btn" onClick={openAuth}>Login</button>
             </div>
             <figure className="landing__image--mask">
               <Image src={landing} alt="landing" />
@@ -263,7 +277,7 @@ const headingsSecond: string[] = [
             </div>
           </div>
           <div className="reviews__btn--wrapper">
-            <button className="btn home__cta--btn">Login</button>
+            <button className="btn home__cta--btn" onClick={openAuth}>Login</button>
           </div>
         </div>
       </div>
@@ -387,6 +401,22 @@ const headingsSecond: string[] = [
         </div>
       </div>
     </section>
+    <AuthModal
+      isOpen={isAuthOpen}
+      closeAuth={() => setIsAuthOpen(false)}
+      openSignup={() => {
+        setIsAuthOpen(false)
+        setIsSignupOpen(true)
+      }}
+      />
+    <CreateAcc 
+    isOpen={isSignupOpen}
+    isClosed={() => setIsSignupOpen(false)}
+    openLogin={() => {
+      setIsSignupOpen(false)
+      setIsAuthOpen(true)
+    }}
+    />
     </div>
   )
 }
