@@ -12,6 +12,12 @@ import { IoLogOutOutline } from 'react-icons/io5'
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaPlayCircle } from "react-icons/fa";
 import Link from 'next/link'
+import { onAuthStateChanged, signOut, User } from 'firebase/auth'
+import { auth } from '@/firebase'
+import AuthModal from '@/components/AuthModal'
+import CreateAcc from '@/components/CreateAcc'
+import ResetPassword from '@/components/ResetPassword'
+
 
 const Page = () => {
 
@@ -22,14 +28,27 @@ const Page = () => {
     subTitle: string
     imageLink: string
     averageRating: number
+    subscriptionRequired: boolean
   }
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
   const [suggestedBooks, setSuggestedBooks] = useState<Book[]>([]);
+  const [user, setUser] = useState<User | null>(null)
+
+  const [authView, setAuthView] = useState<"login" | "signup" | "reset" | null>(null);
+
+    const openAuth = () => {
+    setAuthView("login");
+  };
+
+    const closeAuth = () => {
+      setAuthView(null);
+    };
 
   const pathname = usePathname();
+  
 
 useEffect(() => {
   const fetchData = async () => {
@@ -56,18 +75,28 @@ useEffect(() => {
   fetchData();
 }, []);
 
+const logout = async () => {
+   signOut(auth)
+  .catch(console.error)
+}
+
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev)
   }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   return (
     <div id="__next">
         <div className={styles.wrapper}>
           <div className={styles.search__background}>
             <div className={styles.search__wrapper}>
-              <figure>
-                <Image src="" alt="" />
-              </figure>
               <div className={styles.search__content}>
                 <div className={styles.search}>
                   <div className={`${styles["search__input--wrapper"]}`}>
@@ -141,12 +170,16 @@ useEffect(() => {
                   </div>
                   <div className={`${styles["sidebar__link--text"]}`}>Help & Support</div>
                 </div>
-                <div className={`${styles["sidebar__link--wrapper"]}`}>
-                  <div className={`${styles["sidebar__link--line"]}`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <IoLogOutOutline />
-                  </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>Logout</div>
+                <div className={`${styles["sidebar__link--wrapper"]}`}
+                      onClick={user ? logout : openAuth}
+                >
+                <div className={`${styles['sidebar__link--line']}`}></div>
+                <div className={`${styles["sidebar__icon--wrapper"]}`}>
+                  <IoLogOutOutline />
+                </div>
+                <div className={`${styles["sidebar__link--text"]}`}>
+                  {user ? "Logout" : "Login"}
+                </div>
                 </div>
               </div>
             </div>
@@ -209,6 +242,9 @@ useEffect(() => {
                   <div className={`${styles["recommended__books"]}`}>
                     {recommendedBooks.map((book : Book) => (
                         <div key={book.id} className={`${styles["recommended__books--link"]}`}>
+                          {book.subscriptionRequired && !user && (
+                            <div className={`${styles["book__pill"]} ${styles["book__pill--subscription-required"]}`}>Premium</div>
+                          )}
                           <figure className={`${styles["book__img--wrapper"]}`}>
                             <Image 
                             src={book.imageLink}
@@ -241,13 +277,16 @@ useEffect(() => {
                 <div>
                   <div className={styles.title}>
                     Suggested Books
-                  </div>[]
+                  </div>
                   <div className={`${styles["sub--title"]}`}>
                     Browse those books
                   </div>
                   <div className={`${styles["recommended__books"]}`}>
                   {suggestedBooks.map((book: Book) => (
                     <div key={book.id}  className={`${styles["recommended__books--link"]}`}>
+                      {book.subscriptionRequired && !user && (
+                            <div className={`${styles["book__pill"]} ${styles["book__pill--subscription-required"]}`}>Premium</div>
+                          )}
                           <figure className={`${styles["book__img--wrapper"]}`}>
                             <Image 
                             src={book.imageLink}
@@ -280,6 +319,24 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      <AuthModal
+        isOpen={authView === "login"}
+        closeAuth={closeAuth}
+        openSignup={() => setAuthView("signup")}
+        openReset={() => setAuthView("reset")}
+      />
+
+      <CreateAcc 
+        isOpen={authView === "signup"}
+        closeAuth={() => setAuthView(null)}
+        openLogin={() => setAuthView("login")}
+      />
+
+      <ResetPassword 
+        isOpen={authView === "reset"}
+        closeAuth={() => setAuthView(null)}
+        openLogin={() => setAuthView("login")}
+      />
     </div>
   )
 }

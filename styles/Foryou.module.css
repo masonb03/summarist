@@ -57,6 +57,7 @@
     gap: 24px;
     max-width: 340px;
     width: 100%;
+    margin-left: 41em;
 }
 
 .search, .search__input--wrapper {
@@ -352,6 +353,22 @@
     display: flex;
     width: 16px;
     height: 16px;
+}
+
+.book__pill {
+    background-color: #032b41;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: 18px;
+    padding: 0 8px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
 }
 
 

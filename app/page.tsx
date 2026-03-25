@@ -9,6 +9,7 @@ import { RiLeafLine } from 'react-icons/ri'
 import Image from 'next/image'
 import AuthModal from '@/components/AuthModal'
 import CreateAcc from '@/components/CreateAcc'
+import ResetPassword from '@/components/ResetPassword'
 
 
 const Home = () => {
@@ -31,15 +32,14 @@ const Home = () => {
     "Maximize your abilities"
   ];
 
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
+const [authView, setAuthView] = useState<"login" | "signup" | "reset" | null>(null);
 
   const openAuth = () => {
-    setIsAuthOpen(true);
+    setAuthView("login");
   };
 
   const closeAuth = () => {
-    setIsAuthOpen(false);
+    setAuthView(null);
   };
 
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -402,20 +402,20 @@ const Home = () => {
       </div>
     </section>
     <AuthModal
-      isOpen={isAuthOpen}
-      closeAuth={() => setIsAuthOpen(false)}
-      openSignup={() => {
-        setIsAuthOpen(false)
-        setIsSignupOpen(true)
-      }}
+      isOpen={authView === "login"}
+      closeAuth={closeAuth}
+      openSignup={() => setAuthView("signup")}
+      openReset={() => setAuthView("reset")}
       />
     <CreateAcc 
-    isOpen={isSignupOpen}
-    isClosed={() => setIsSignupOpen(false)}
-    openLogin={() => {
-      setIsSignupOpen(false)
-      setIsAuthOpen(true)
-    }}
+    isOpen={authView === "signup"}
+    closeAuth={closeAuth}
+    openLogin={() => setAuthView("login")}
+    />
+    <ResetPassword 
+    isOpen={authView === "reset"}
+    closeAuth={closeAuth}
+    openLogin={() => setAuthView("login")}
     />
     </div>
   )
