@@ -1,25 +1,16 @@
 "use client"
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
-import logo from "../../public/logo.png"
 import styles from '../../styles/Foryou.module.css'
-import { AiOutlineHome } from 'react-icons/ai'
-import { CiBookmark, CiSettings, CiCircleQuestion, CiClock2 } from 'react-icons/ci'
-import { RiBallPenLine } from 'react-icons/ri'
-import { IoMdSearch, IoIosSearch, IoIosStarOutline } from 'react-icons/io'
-import { IoLogOutOutline } from 'react-icons/io5'
-import { RxHamburgerMenu } from "react-icons/rx";
 import { FaPlayCircle } from "react-icons/fa";
-import Link from 'next/link'
-import { onAuthStateChanged, signOut, User } from 'firebase/auth'
-import { auth } from '@/firebase'
-import AuthModal from '@/components/AuthModal'
-import CreateAcc from '@/components/CreateAcc'
-import ResetPassword from '@/components/ResetPassword'
+import { IoIosStarOutline } from 'react-icons/io'
+import { CiClock2 } from 'react-icons/ci'
+import { useUser } from '@/components/UserContext';
 
 
 const Page = () => {
+
+  const {user} = useUser();
 
   type Book = {
     id: string
@@ -31,24 +22,12 @@ const Page = () => {
     subscriptionRequired: boolean
   }
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
   const [suggestedBooks, setSuggestedBooks] = useState<Book[]>([]);
-  const [user, setUser] = useState<User | null>(null)
-
-  const [authView, setAuthView] = useState<"login" | "signup" | "reset" | null>(null);
-
-    const openAuth = () => {
-    setAuthView("login");
-  };
-
-    const closeAuth = () => {
-      setAuthView(null);
-    };
-
-  const pathname = usePathname();
-  
 
 useEffect(() => {
   const fetchData = async () => {
@@ -75,115 +54,9 @@ useEffect(() => {
   fetchData();
 }, []);
 
-const logout = async () => {
-   signOut(auth)
-  .catch(console.error)
-}
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(prev => !prev)
-  }
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-    })
-
-    return () => unsubscribe()
-  }, [])
-
   return (
     <div id="__next">
         <div className={styles.wrapper}>
-          <div className={styles.search__background}>
-            <div className={styles.search__wrapper}>
-              <div className={styles.search__content}>
-                <div className={styles.search}>
-                  <div className={`${styles["search__input--wrapper"]}`}>
-                    <input type="text" className={styles.search__input}
-                    placeholder="Search for books"
-                    />
-                    <div className={styles.search__icon}>
-                      <IoIosSearch />
-                    </div>
-                  </div>
-                </div>
-                <div className={`${styles["sidebar__toggle--btn"]}`}
-                onClick={toggleSidebar}>
-                <RxHamburgerMenu />
-                </div>
-            </div>
-            </div>
-          </div>
-          <div className={`${styles["sidebar__overlay"]} ${
-            !isSidebarOpen && styles["sidebar__overlay--hidden"]}`}
-            onClick={toggleSidebar}></div>
-          <div className={`${styles['sidebar']} ${ isSidebarOpen ? "" : styles['sidebar--closed']}`}>
-            <div className={styles.sidebar__logo}>
-              <Image src={logo} alt="" />
-            </div>
-            <div className={styles.sidebar__wrapper}>
-              <div className={styles.sidebar__top}>
-                <Link href="/for-you">
-                <div className={`${styles['sidebar__link--wrapper']}`}>
-                  <div className={`${styles["sidebar__link--line"]} ${pathname === "/for-you" ? styles["active--tab"] : "" }`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <AiOutlineHome />
-                  </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>For you</div>
-                </div>
-                </Link>
-                <div className={`${styles["sidebar__link--wrapper"]}`}>
-                  <div className={`${styles["sidebar__link--line"]}`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <CiBookmark />
-                  </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>My Library</div>
-                </div>
-                <div className={`${styles['sidebar__link--wrapper']} ${styles['sidebar__link--not-allowed']}`}>
-                  <div className={`${styles["sidebar__link--line"]}`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <RiBallPenLine />
-                  </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>Highlights</div>
-                </div>
-                <div className={`${styles['sidebar__link--wrapper']} ${styles['sidebar__link--not-allowed']}`}>
-                  <div className={`${styles["sidebar__link--line"]}`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <IoMdSearch />
-                  </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>Search</div>
-                </div>
-              </div>
-              <div className="sidebar__bottom">
-                <div className={`${styles["sidebar__link--wrapper"]}`}>
-                  <div className={`${styles["sidebar__link--line"]}`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <CiSettings />
-                  </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>Settings</div>
-                </div>
-                <div className={`${styles['sidebar__link--wrapper']} ${styles['sidebar__link--not-allowed']}`}>
-                  <div className={`${styles["sidebar__link--line"]}`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <CiCircleQuestion />
-                  </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>Help & Support</div>
-                </div>
-                <div className={`${styles["sidebar__link--wrapper"]}`}
-                      onClick={user ? logout : openAuth}
-                >
-                <div className={`${styles['sidebar__link--line']}`}></div>
-                <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                  <IoLogOutOutline />
-                </div>
-                <div className={`${styles["sidebar__link--text"]}`}>
-                  {user ? "Logout" : "Login"}
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
         <div className={styles.row}>
           <div className={styles.container}>
               <div className={`${styles["for-you__wrapper"]}`}>
@@ -319,24 +192,6 @@ const logout = async () => {
           </div>
         </div>
       </div>
-      <AuthModal
-        isOpen={authView === "login"}
-        closeAuth={closeAuth}
-        openSignup={() => setAuthView("signup")}
-        openReset={() => setAuthView("reset")}
-      />
-
-      <CreateAcc 
-        isOpen={authView === "signup"}
-        closeAuth={() => setAuthView(null)}
-        openLogin={() => setAuthView("login")}
-      />
-
-      <ResetPassword 
-        isOpen={authView === "reset"}
-        closeAuth={() => setAuthView(null)}
-        openLogin={() => setAuthView("login")}
-      />
     </div>
   )
 }
