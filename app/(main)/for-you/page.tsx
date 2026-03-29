@@ -1,11 +1,12 @@
 "use client"
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import styles from '../../styles/Foryou.module.css'
+import styles from '../../../styles/Foryou.module.css'
 import { FaPlayCircle } from "react-icons/fa";
 import { IoIosStarOutline } from 'react-icons/io'
 import { CiClock2 } from 'react-icons/ci'
 import { useUser } from '@/components/UserContext';
+import Link from 'next/link';
 
 
 const Page = () => {
@@ -114,6 +115,7 @@ useEffect(() => {
                   </div>
                   <div className={`${styles["recommended__books"]}`}>
                     {recommendedBooks.map((book : Book) => (
+                      <Link href={`/book/${book.id}`} key={book.id}>
                         <div key={book.id} className={`${styles["recommended__books--link"]}`}>
                           {book.subscriptionRequired && !user && (
                             <div className={`${styles["book__pill"]} ${styles["book__pill--subscription-required"]}`}>Premium</div>
@@ -144,6 +146,7 @@ useEffect(() => {
                             </div>
                           </div>
                         </div>
+                        </Link>
                     ))}
                   </div>
                 </div>
