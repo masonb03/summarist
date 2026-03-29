@@ -1,7 +1,8 @@
 "use client"
 import React, { useState, useEffect, ReactNode } from 'react';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { auth } from '@/firebase';
+import { auth, db } from '@/firebase';
+import { getDoc, doc } from 'firebase/firestore';
 import Sidebar from '@/components/Sidebar';
 import AuthModal from '@/components/AuthModal';
 import CreateAcc from '@/components/CreateAcc';
@@ -16,14 +17,21 @@ type ForYouLayoutProps = {
 const ForYouLayout = ({ children }: ForYouLayoutProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [authView, setAuthView] = useState<"login" | "signup" | "reset" | null>(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const openAuth = () => setAuthView("login");
   const closeAuth = () => setAuthView(null);
   const logout = () => signOut(auth).catch(console.error);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if(currentUser) {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        setIsSubscribed(userDoc.data()?.isSubscribed ?? false);
+      } else {
+        setIsSubscribed(false)
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -31,7 +39,7 @@ const ForYouLayout = ({ children }: ForYouLayoutProps) => {
   return (
     <div>
       <Searchbar />
-      <UserContext.Provider value={{ user }}>
+      <UserContext.Provider value={{ user, isSubscribed, openAuth }}>
         <Sidebar openAuth={openAuth} logout={logout} />
         <main>
           {children}
