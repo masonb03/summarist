@@ -38,8 +38,8 @@ const ForYouLayout = ({ children }: ForYouLayoutProps) => {
 
   return (
     <div>
-      <Searchbar />
       <UserContext.Provider value={{ user, isSubscribed, openAuth }}>
+      <Searchbar />
         <Sidebar openAuth={openAuth} logout={logout} />
         <main>
           {children}

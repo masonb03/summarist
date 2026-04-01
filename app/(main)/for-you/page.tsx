@@ -5,13 +5,13 @@ import styles from '../../../styles/Foryou.module.css'
 import { FaPlayCircle } from "react-icons/fa";
 import { IoIosStarOutline } from 'react-icons/io'
 import { CiClock2 } from 'react-icons/ci'
-import { useUser } from '@/components/UserContext';
 import Link from 'next/link';
+import { useUser } from '@/components/UserContext';
 
 
 const Page = () => {
 
-  const {user} = useUser();
+  const {user, isSubscribed} = useUser();
 
   type Book = {
     id: string
@@ -117,7 +117,7 @@ useEffect(() => {
                     {recommendedBooks.map((book : Book) => (
                       <Link href={`/book/${book.id}`} key={book.id}>
                         <div key={book.id} className={`${styles["recommended__books--link"]}`}>
-                          {book.subscriptionRequired && !user && (
+                          {book.subscriptionRequired && !isSubscribed && (
                             <div className={`${styles["book__pill"]} ${styles["book__pill--subscription-required"]}`}>Premium</div>
                           )}
                           <figure className={`${styles["book__img--wrapper"]}`}>
@@ -159,11 +159,12 @@ useEffect(() => {
                   </div>
                   <div className={`${styles["recommended__books"]}`}>
                   {suggestedBooks.map((book: Book) => (
-                    <div key={book.id}  className={`${styles["recommended__books--link"]}`}>
-                      {book.subscriptionRequired && !user && (
-                            <div className={`${styles["book__pill"]} ${styles["book__pill--subscription-required"]}`}>Premium</div>
-                          )}
-                          <figure className={`${styles["book__img--wrapper"]}`}>
+                    <Link href={`/book/${book.id}`} key={book.id}>
+                      <div className={`${styles["recommended__books--link"]}`}>
+                        {book.subscriptionRequired && !isSubscribed && (
+                              <div className={`${styles["book__pill"]} ${styles["book__pill--subscription-required"]}`}>Premium</div>
+                            )}
+                            <figure className={`${styles["book__img--wrapper"]}`}>
                             <Image 
                             src={book.imageLink}
                             alt="book" 
@@ -188,8 +189,10 @@ useEffect(() => {
                               <div className={`${styles["recommended__book--details-text"]}`}>{book.averageRating}</div>
                             </div>
                           </div>
-                        </div>
-                  ))}</div>
+                      </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
           </div>
