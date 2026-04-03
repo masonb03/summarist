@@ -3,7 +3,7 @@ import { User } from "firebase/auth";
 
 type UserContextType = {
   user: User | null;
-  isSubscribed: boolean;
+  isSubscribed: boolean | "premium" | "premium-plus";
   openAuth: () => void;
 };
 

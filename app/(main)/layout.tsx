@@ -27,6 +27,10 @@ const ForYouLayout = ({ children }: ForYouLayoutProps) => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if(currentUser) {
+        if (currentUser.isAnonymous) {
+        setIsSubscribed(true);
+        return;
+      }
         const userDoc = await getDoc(doc(db, "users", currentUser.uid));
         setIsSubscribed(userDoc.data()?.isSubscribed ?? false);
       } else {

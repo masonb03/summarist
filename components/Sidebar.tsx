@@ -68,13 +68,15 @@ const Sidebar = ({ logout, openAuth }: { logout: () => void; openAuth: () => voi
                 </div>
               </div>
               <div className={styles.sidebar__bottom}>
-                <div className={`${styles["sidebar__link--wrapper"]}`}>
-                  <div className={`${styles["sidebar__link--line"]}`}></div>
-                  <div className={`${styles["sidebar__icon--wrapper"]}`}>
-                    <CiSettings />
+                <Link href="/settings">
+                  <div className={`${styles["sidebar__link--wrapper"]}`}>
+                    <div className={`${styles["sidebar__link--line"]}`}></div>
+                    <div className={`${styles["sidebar__icon--wrapper"]}`}>
+                      <CiSettings />
+                    </div>
+                    <div className={`${styles["sidebar__link--text"]}`}>Settings</div>
                   </div>
-                  <div className={`${styles["sidebar__link--text"]}`}>Settings</div>
-                </div>
+                </Link>
                 <div className={`${styles['sidebar__link--wrapper']} ${styles['sidebar__link--not-allowed']}`}>
                   <div className={`${styles["sidebar__link--line"]}`}></div>
                   <div className={`${styles["sidebar__icon--wrapper"]}`}>
