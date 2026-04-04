@@ -18,6 +18,7 @@ const Sidebar = ({ logout, openAuth }: { logout: () => void; openAuth: () => voi
   const {user} = useUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const isPlayerPage = pathname?.startsWith("/player");
   const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
 
 
@@ -34,7 +35,8 @@ const Sidebar = ({ logout, openAuth }: { logout: () => void; openAuth: () => voi
             <div className={styles.sidebar__logo}>
               <Image src={logo} alt="" />
             </div>
-            <div className={styles.sidebar__wrapper}>
+            <div className={styles.sidebar__wrapper}
+             style={{ paddingBottom: isPlayerPage ? "100px" : "20px" }}>
               <div className={styles.sidebar__top}>
                 <Link href="/for-you">
                 <div className={`${styles['sidebar__link--wrapper']}`}>

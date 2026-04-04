@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import AudioDuration from './AudioDuration'
+import SearchSkeleton from './skeletons/SearchSkeleton'
 
 type Book = {
   id: string;
@@ -89,7 +90,7 @@ const Searchbar = () => {
 
                 {search.trim() && (
                   <div className={styles['search__books--wrapper']}>
-                    {loading && <div className={styles.search__loading}>Searching...</div>}
+                    {loading && <SearchSkeleton />}
                     {!loading && results.length === 0 && (
                       <div className={styles["search__no--results"]}>No books found</div>
                     )}

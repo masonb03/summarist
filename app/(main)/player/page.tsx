@@ -1,6 +1,8 @@
 "use client"
 import AudioPlayer from '@/components/AudioPlayer';
 import styles from '../../../styles/player.module.css'
+import { useEffect, useState } from 'react';
+import Spinner from '@/components/Spinner';
 
 type Player = {
   id: string;
@@ -16,6 +18,19 @@ type Props = {
 }
 
 const Player = ({ book }: Props) => {
+
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setLoading(false);
+  }, 500);
+
+  return () => clearTimeout(timer);
+}, []);
+
+if (loading) return <Spinner />
+
   return (
     <div className={styles.summary}>
       <div className={styles["audio__book--summary"]}>
