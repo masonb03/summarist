@@ -7,6 +7,8 @@ import { IoIosStarOutline } from 'react-icons/io'
 import { CiClock2 } from 'react-icons/ci'
 import Link from 'next/link';
 import { useUser } from '@/components/UserContext';
+import ForYouSkeleton from '@/components/skeletons/ForYouSkeleton';
+import AudioDuration from '@/components/AudioDuration';
 
 
 const Page = () => {
@@ -21,6 +23,7 @@ const Page = () => {
     imageLink: string
     averageRating: number
     subscriptionRequired: boolean
+    audioLink: string
   }
 
   
@@ -29,9 +32,11 @@ const Page = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
   const [suggestedBooks, setSuggestedBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
 
 useEffect(() => {
   const fetchData = async () => {
+    setLoading(true);
     try {
       const [selectedRes, recommendedRes, suggestedRes] = await Promise.all([
         fetch("https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected"),
@@ -49,6 +54,8 @@ useEffect(() => {
 
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,6 +63,11 @@ useEffect(() => {
 }, []);
 
   return (
+    <>
+    {loading ? (
+      <ForYouSkeleton />
+    ) : (
+
     <div id="__next">
         <div className={styles.wrapper}>
         <div className={styles.row}>
@@ -99,7 +111,7 @@ useEffect(() => {
                           </div>
 
                           <div className={styles["selected__book--duration"]}>
-                            3 mins 23 secs
+                            <AudioDuration audioLink={selectedBook.audioLink} />
                           </div>
                         </div>
                       </div>
@@ -136,7 +148,7 @@ useEffect(() => {
                               <div className={`${styles["recommended__book--details-icon"]}`}>
                                 <CiClock2 />
                               </div>
-                              <div className={`${styles["recommended__book--details-text"]}`}>03:02</div>
+                              <div className={`${styles["recommended__book--details-text"]}`}><AudioDuration audioLink={book.audioLink} /></div>
                             </div>
                             <div className={`${styles["recommended__book--details"]}`}>
                               <div className={`${styles["recommended__book--details-icon"]}`}>
@@ -180,7 +192,7 @@ useEffect(() => {
                               <div className={`${styles["recommended__book--details-icon"]}`}>
                                 <CiClock2 />
                               </div>
-                              <div className={`${styles["recommended__book--details-text"]}`}>03:24</div>
+                              <div className={`${styles["recommended__book--details-text"]}`}><AudioDuration audioLink={book.audioLink} /></div>
                             </div>
                             <div className={`${styles["recommended__book--details"]}`}>
                               <div className={`${styles["recommended__book--details-icon"]}`}>
@@ -199,6 +211,8 @@ useEffect(() => {
         </div>
       </div>
     </div>
+    )}
+    </>
   )
 }
 

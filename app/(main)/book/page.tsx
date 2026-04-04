@@ -8,6 +8,9 @@ import styles from '../../../styles/book.module.css'
 import { useContext } from "react";
 import UserContext from "@/components/UserContext";
 import { useRouter } from "next/navigation";
+import { db } from "@/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import AudioDuration from "@/components/AudioDuration";
 
 type Book = {
   id: string;
@@ -32,6 +35,8 @@ type Props = {
   book: Book;
 }
 
+
+
 const Book = ({ book }: Props) => {
   const {user, isSubscribed, openAuth} = useContext(UserContext);
   const router = useRouter();
@@ -50,13 +55,20 @@ const Book = ({ book }: Props) => {
     router.push(`/player/${book.id}`)
   }
 
-  const handleLibrary = () => {
-    if(!user) {
-      openAuth();
-      return
-    }
-    console.log("SAVED TO LIBRARY", book.id)
+
+  const handleLibrary = async () => {
+  if(!user) {
+    openAuth();
+    return
   }
+  await setDoc(doc(db, "users", user.uid, "library", book.id), {
+    id: book.id,
+    title: book.title,
+    author: book.author,
+    imageLink: book.imageLink,
+    subscriptionRequired: book.subscriptionRequired,
+  });
+}
 
 
   return (
@@ -78,7 +90,7 @@ const Book = ({ book }: Props) => {
                 </div>
                 <div className={styles["inner__book--description"]}>
                   <div className={styles.book__icon}><CiClock2 /></div>
-                  <div className={styles.book__duration}>03:24</div>
+                  <div className={styles.book__duration}><AudioDuration audioLink={book.audioLink} /></div>
                 </div>
                 <div className={styles["inner__book--description"]}>
                   <div className={styles.book__icon}><IoMicOutline /></div>
@@ -115,7 +127,7 @@ const Book = ({ book }: Props) => {
               ))}
             </div>
 
-            <div className={styles["book__description"]}>{book.summary}</div>
+            <div className={styles["book__description"]}>{book.bookDescription}</div>
 
             <h2 className={styles["book__second--title"]}>About the Author</h2>
             <div className={styles["book__author--description"]}>{book.authorDescription}</div>
