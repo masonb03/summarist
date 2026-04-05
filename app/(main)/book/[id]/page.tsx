@@ -1,5 +1,5 @@
 // app/book/[id]/page.tsx
-import Book from "../page";
+import Book from "../Book";
 
 const BookPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
