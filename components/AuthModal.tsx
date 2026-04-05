@@ -6,6 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import { auth } from "../firebase"
 import { signInAnonymously, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import guest from "../public/people.png";
 
 
 
@@ -66,7 +67,7 @@ const AuthModal = ({ isOpen, closeAuth, openSignup, openReset }: Props) => {
             <div className="auth__title">Log in to Summarist</div>
                     <button className="btn guest__btn--wrapper" onClick={loginAsGuest}>
                         <figure className="google__icon--mask guest__icon--mask">
-                        <Image src={google} alt="guest" />
+                        <Image src={guest} alt="guest" />
                         </figure>
                         <div>Login as a Guest</div>
                     </button>
