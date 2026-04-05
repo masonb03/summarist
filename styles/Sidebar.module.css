@@ -112,3 +112,23 @@
 .sidebar__link--wrapper:hover {
     background-color: #f0efef;
 }
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar--open {
+    transform: translateX(0);
+    width: 80%;
+  }
+
+  .sidebar__toggle--btn {
+    display: flex;
+    position: fixed;
+    top: 28px;
+    right: 16px;
+    z-index: 999;
+  }
+}

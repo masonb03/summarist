@@ -144,3 +144,46 @@ button:active {
   cursor: pointer;
 }
 
+@media (max-width: 768px) {
+  .audio__wrapper {
+    padding: 16px 24px;
+    height: 150px;
+    flex-direction: column;
+  }
+
+  .audio__wrapper > div {
+    width: 70%;
+    justify-content: center;
+  }
+
+  .audio__track--wrapper {
+    justify-content: center;
+  }
+
+  .audio__progress--wrapper {
+    justify-content: center;
+  }
+
+  .audio__progress--bar {
+    max-width: 100%;
+  }
+
+  .audio__book--summary {
+    padding: 16px;
+    padding-bottom: 45px;
+  }
+
+  .audio__book--summary-title {
+    font-size: 18px;
+  }
+
+  .audio__book--summary-text {
+    font-size: 14px;
+  }
+
+  .summary {
+    height: calc(100vh - 180px);
+    padding-bottom: 20px;
+  }
+}
+
