@@ -31,7 +31,7 @@ const Sidebar = ({ logout, openAuth }: { logout: () => void; openAuth: () => voi
       <div className={`${styles["sidebar__overlay"]} ${
             !isSidebarOpen && styles["sidebar__overlay--hidden"]}`}
             onClick={toggleSidebar}></div>
-          <div className={`${styles['sidebar']} ${ isSidebarOpen ? "" : styles['sidebar--closed']}`}>
+          <div className={`${styles['sidebar']} ${ isSidebarOpen ? styles["sidebar--open"] : ""}`}>
             <div className={styles.sidebar__logo}>
               <Image src={logo} alt="" />
             </div>
