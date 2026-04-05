@@ -69,9 +69,7 @@ const Searchbar = () => {
   return (
     <div className={styles.search__background}>
             <div className={styles.search__wrapper}>
-              <figure>
-                <Image src="" alt="" />
-              </figure>
+              <div></div>
               <div className={styles.search__content}>
                 <div className={styles.search}>
                   <div className={`${styles["search__input--wrapper"]}`}>
